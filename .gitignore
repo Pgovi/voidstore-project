@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.vercel/
+aws/node_modules/
+.env
+.env.local
