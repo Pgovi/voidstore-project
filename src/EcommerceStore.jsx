@@ -476,10 +476,10 @@ export default function EcommerceStore() {
           padding: "10px clamp(16px, 4vw, 48px)", textAlign: "center",
           borderBottom: `1px solid ${border}`, background: "rgba(176,141,62,0.05)",
         }}>
-          <p style={{ fontSize: "13px", color: t2 }}>
+          <p className="announce-text" style={{ fontSize: "13px", color: t2 }}>
             <span style={{ fontWeight: 700, color: t1 }}>SUMMER SALE</span>
             {" "}&mdash; Flat 20% OFF on orders above ₹5,000{" "}
-            <span style={{
+            <span className="announce-code" style={{
               fontFamily: mono, fontSize: "12px", background: "rgba(0,0,0,0.05)",
               border: `1px solid ${border}`, padding: "3px 10px", borderRadius: "6px",
               marginLeft: "8px", color: gold, fontWeight: 600, letterSpacing: "0.5px",
@@ -516,7 +516,7 @@ export default function EcommerceStore() {
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div className="nav-actions" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <div className="search-wrap" style={{ position: "relative" }}>
               <input
                 type="text" placeholder="Search..." value={searchQuery}
@@ -605,7 +605,7 @@ export default function EcommerceStore() {
                 )}
               </div>
             ) : (
-              <button onClick={() => setLoginOpen(true)} style={{
+              <button className="login-btn" onClick={() => setLoginOpen(true)} style={{
                 background: "rgba(0,0,0,0.04)", border: `1px solid ${border}`,
                 borderRadius: "8px", padding: "7px 12px", color: t2, cursor: "pointer",
                 fontSize: "13px", fontFamily: f, display: "flex", alignItems: "center", gap: "5px",
@@ -613,7 +613,7 @@ export default function EcommerceStore() {
               }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = t1; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; e.currentTarget.style.color = t2; }}
-              >{Icons.user} Login</button>
+              >{Icons.user} <span className="login-text">Login</span></button>
             )}
 
             <button className="mobile-menu-btn" onClick={() => setMobileMenu(!mobileMenu)} style={{
@@ -626,11 +626,24 @@ export default function EcommerceStore() {
         {mobileMenu && (
           <div style={{
             position: "fixed", inset: 0, top: "64px", background: "rgba(255,255,255,0.97)", zIndex: 99,
-            display: "flex", flexDirection: "column", padding: "32px 24px", gap: "24px",
+            display: "flex", flexDirection: "column", padding: "24px", gap: "16px",
             backdropFilter: "blur(20px)",
           }}>
+            {/* Mobile search */}
+            <div style={{ position: "relative", marginBottom: "8px" }}>
+              <input
+                type="text" placeholder="Search products..." value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); if (e.target.value) { setMobileMenu(false); shopRef.current?.scrollIntoView({ behavior: "smooth" }); } }}
+                style={{
+                  width: "100%", background: "rgba(0,0,0,0.04)", border: `1px solid ${border}`,
+                  borderRadius: "10px", padding: "12px 14px 12px 40px", color: t1, fontSize: "15px",
+                  fontFamily: f, outline: "none", boxSizing: "border-box",
+                }}
+              />
+              <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: t3 }}>{Icons.search}</span>
+            </div>
             {["Shop", "Story", "Contact"].map((item) => (
-              <span key={item} style={{ fontSize: "20px", fontWeight: 600, color: t1, cursor: "pointer" }}
+              <span key={item} style={{ fontSize: "18px", fontWeight: 600, color: t1, cursor: "pointer", padding: "8px 0", borderBottom: `1px solid ${border}` }}
                 onClick={() => {
                   setMobileMenu(false);
                   if (item === "Shop") shopRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -714,8 +727,8 @@ export default function EcommerceStore() {
               </h3>
 
               {/* Category pills + Sort */}
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <div className="shop-controls" style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
+                <div className="category-pills" style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                   {categories.map((cat) => (
                     <button key={cat} onClick={() => setActiveCategory(cat)} style={{
                       background: activeCategory === cat ? t1 : "rgba(0,0,0,0.04)",
@@ -741,7 +754,7 @@ export default function EcommerceStore() {
             </div>
 
             {/* Product grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
+            <div className="product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
               {filteredProducts.map((product) => (
                 <div key={product.id} className="product-card" style={{
                   background: card, borderRadius: "12px", overflow: "hidden",
@@ -793,7 +806,7 @@ export default function EcommerceStore() {
                   </div>
 
                   {/* Info */}
-                  <div style={{ padding: "16px" }}>
+                  <div className="card-info" style={{ padding: "16px" }}>
                     <p style={{ fontSize: "11px", color: t3, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 500 }}>
                       {product.category}
                     </p>
@@ -802,7 +815,7 @@ export default function EcommerceStore() {
                         Only {product.stock} left in stock
                       </p>
                     )}
-                    <h4 onClick={() => setSelectedProduct(product)} style={{
+                    <h4 className="card-title" onClick={() => setSelectedProduct(product)} style={{
                       fontSize: "14px", fontWeight: 600, marginBottom: "8px", lineHeight: 1.4,
                       letterSpacing: "-0.2px", cursor: "pointer",
                     }}>{product.name}</h4>
@@ -813,9 +826,9 @@ export default function EcommerceStore() {
                       <span style={{ fontSize: "12px", color: t3 }}>({product.reviews.toLocaleString()})</span>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                        <span style={{ fontSize: "16px", fontWeight: 700 }}>
+                    <div className="card-price-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <div className="card-prices" style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+                        <span className="card-price" style={{ fontSize: "16px", fontWeight: 700 }}>
                           ₹{product.price.toLocaleString("en-IN")}
                         </span>
                         {product.originalPrice && (
@@ -926,7 +939,7 @@ export default function EcommerceStore() {
             <h3 style={{ fontSize: "clamp(22px, 3vw, 32px)", fontWeight: 800, letterSpacing: "-1px", marginBottom: "32px" }}>
               What Customers Say
             </h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" }}>
+            <div className="testimonial-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" }}>
               {[
                 { name: "Priya M.", city: "Bangalore", text: "The Nandi Basavanna frame is absolutely stunning. The silver inlay catches the light beautifully. A true masterpiece for our pooja room.", stars: 5 },
                 { name: "Rajesh K.", city: "Mumbai", text: "Gifted the 4-Vase Set to my parents on their anniversary. They were moved to tears. The craftsmanship is unmatched.", stars: 5 },
@@ -967,7 +980,7 @@ export default function EcommerceStore() {
             <p style={{ fontSize: "13px", color: t2, marginBottom: "24px", lineHeight: 1.6 }}>
               New collections, artisan stories, and exclusive offers. No spam.
             </p>
-            <div style={{ display: "flex", gap: "8px", maxWidth: "400px", margin: "0 auto" }}>
+            <div className="newsletter-row" style={{ display: "flex", gap: "8px", maxWidth: "400px", margin: "0 auto" }}>
               <input type="email" placeholder="your@email.com" style={{
                 flex: 1, background: "rgba(0,0,0,0.04)", border: `1px solid ${border}`,
                 borderRadius: "8px", padding: "10px 14px", color: t1, fontSize: "13px",
@@ -993,7 +1006,7 @@ export default function EcommerceStore() {
               @bidrikala on Instagram
             </h3>
             <p style={{ fontSize: "13px", color: t2, marginBottom: "24px" }}>See our latest creations and behind-the-scenes from the workshop</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
+            <div className="insta-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
               {products.slice(0, 6).map((p, i) => (
                 <a key={i} href="https://instagram.com/bidrikala" target="_blank" rel="noopener noreferrer" style={{
                   aspectRatio: "1", borderRadius: "10px", overflow: "hidden", position: "relative",
@@ -1809,7 +1822,7 @@ export default function EcommerceStore() {
                     I've Completed the Payment
                   </button>
                   {/* Secure Payment Badges */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", marginTop: "16px", padding: "12px", borderRadius: "8px", background: "rgba(0,0,0,0.02)", border: `1px solid ${border}` }}>
+                  <div className="payment-badges" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", marginTop: "16px", padding: "12px", borderRadius: "8px", background: "rgba(0,0,0,0.02)", border: `1px solid ${border}`, flexWrap: "wrap" }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     <span style={{ fontSize: "11px", color: t2, fontWeight: 500 }}>100% Secure</span>
                     <span style={{ width: "1px", height: "14px", background: border }} />
@@ -1940,9 +1953,10 @@ export default function EcommerceStore() {
             zIndex: 400, display: "flex", flexDirection: "column", justifyContent: "flex-end",
             animation: "fadeIn 0.2s ease",
           }}>
-            <div onClick={(e) => e.stopPropagation()} style={{
+            <div className="craft-sheet" onClick={(e) => e.stopPropagation()} style={{
               background: "#ffffff", borderRadius: "20px 20px 0 0", maxHeight: "90vh",
-              overflowY: "auto", borderTop: `1px solid rgba(0,0,0,0.06)`,
+              width: "100%", overflowX: "hidden", overflowY: "auto",
+              borderTop: `1px solid rgba(0,0,0,0.06)`,
               animation: "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
               boxShadow: "0 -8px 40px rgba(0,0,0,0.1)",
             }}>
@@ -1952,9 +1966,9 @@ export default function EcommerceStore() {
               </div>
 
               {/* Header */}
-              <div style={{ padding: "28px 32px 32px", textAlign: "center", position: "relative" }}>
+              <div className="craft-sheet-header" style={{ padding: "28px 32px 32px", textAlign: "center", position: "relative" }}>
                 <button onClick={() => setCraftSheetOpen(false)} style={{
-                  position: "absolute", top: "12px", right: "24px", background: "rgba(0,0,0,0.04)",
+                  position: "absolute", top: "12px", right: "16px", background: "rgba(0,0,0,0.04)",
                   border: "none", color: t3, cursor: "pointer", width: "32px", height: "32px",
                   borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center",
                 }}>{Icons.close}</button>
@@ -1970,14 +1984,14 @@ export default function EcommerceStore() {
                 </p>
               </div>
 
-              <div style={{ height: "1px", background: border, margin: "0 32px" }} />
+              <div className="craft-sheet-divider" style={{ height: "1px", background: border, margin: "0 32px" }} />
 
               {/* Steps */}
-              <div style={{ padding: "32px 32px 24px", maxWidth: "680px", margin: "0 auto" }}>
+              <div className="craft-sheet-steps" style={{ padding: "32px 32px 24px", maxWidth: "680px", margin: "0 auto" }}>
                 {CRAFT_STEPS.map((item, idx) => (
                   <div key={item.step} style={{
-                    display: "flex", gap: "20px", alignItems: "flex-start",
-                    padding: "16px 0", borderBottom: idx < 7 ? `1px solid ${border}` : "none",
+                    display: "flex", gap: "16px", alignItems: "flex-start",
+                    padding: "14px 0", borderBottom: idx < 7 ? `1px solid ${border}` : "none",
                   }}>
                     <div style={{
                       width: "36px", height: "36px", borderRadius: "8px",
@@ -1996,7 +2010,7 @@ export default function EcommerceStore() {
               </div>
 
               {/* CTA */}
-              <div style={{ padding: "8px 32px 32px", textAlign: "center" }}>
+              <div className="craft-sheet-cta" style={{ padding: "8px 32px 32px", textAlign: "center" }}>
                 <div style={{ height: "1px", background: border, marginBottom: "24px" }} />
                 <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
                   <button onClick={() => { setCraftSheetOpen(false); shopRef.current?.scrollIntoView({ behavior: "smooth" }); }} style={{
@@ -2219,7 +2233,7 @@ export default function EcommerceStore() {
         )}
 
         {/* ══════ SOCIAL PROOF POPUP ══════ */}
-        <div style={{
+        <div className="social-proof" style={{
           position: "fixed", bottom: socialProof.visible ? "24px" : "-120px", left: "24px",
           background: card, border: `1px solid ${border}`, borderRadius: "12px",
           padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px",
@@ -2249,7 +2263,8 @@ export default function EcommerceStore() {
       </div>
 
       <style>{`
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { overflow-x: hidden; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -2261,11 +2276,20 @@ export default function EcommerceStore() {
         @keyframes slideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+        /* Card layout — pin price row to bottom on all screen sizes */
+        .product-card { display: flex !important; flex-direction: column !important; }
+        .card-info { display: flex !important; flex-direction: column !important; flex: 1 !important; }
+        .card-price-row { margin-top: auto !important; }
+        .card-title { display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
         /* Responsive */
         @media (max-width: 768px) {
           .nav-links { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
           .search-wrap { display: none !important; }
+          .login-text { display: none !important; }
+          .login-btn { padding: 7px 10px !important; }
+          .nav-actions { gap: 8px !important; }
           .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
           .modal-content { grid-template-columns: 1fr !important; }
           .modal-content > div:first-child { min-height: 200px !important; border-radius: 16px 16px 0 0 !important; }
@@ -2273,10 +2297,35 @@ export default function EcommerceStore() {
           .back-to-top { display: none !important; }
           .whatsapp-float { bottom: 16px !important; right: 16px !important; }
           .sticky-mobile-cart { display: flex !important; }
+          .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+          .product-grid .product-card { border-radius: 10px !important; }
+          .card-info { padding: 10px !important; }
+          .card-title { font-size: 12px !important; margin-bottom: 6px !important; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+          .card-price { font-size: 14px !important; }
+          .card-prices { gap: 4px !important; }
+          .card-price-row { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; margin-top: auto !important; }
+          .card-price-row button { width: 100% !important; text-align: center !important; justify-content: center !important; }
+          .announce-text { font-size: 11px !important; }
+          .testimonial-grid { grid-template-columns: 1fr !important; }
+          .insta-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+          .category-pills { flex-wrap: nowrap !important; overflow-x: auto !important; padding-bottom: 4px !important; -ms-overflow-style: none; scrollbar-width: none; }
+          .category-pills::-webkit-scrollbar { display: none; }
+          .category-pills button { flex-shrink: 0 !important; padding: 6px 12px !important; font-size: 12px !important; }
+          .shop-controls { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+          .shop-controls select { align-self: flex-start !important; }
+          .payment-badges { gap: 10px !important; }
+          .social-proof { left: 12px !important; max-width: 280px !important; }
+          .craft-sheet-header { padding: 20px 16px 24px !important; }
+          .craft-sheet-divider { margin: 0 16px !important; }
+          .craft-sheet-steps { padding: 20px 16px 16px !important; }
+          .craft-sheet-cta { padding: 8px 16px 24px !important; }
         }
 
         @media (max-width: 480px) {
           .footer-grid { grid-template-columns: 1fr !important; }
+          .product-grid { gap: 8px !important; }
+          .announce-code { display: none !important; }
+          .newsletter-row { flex-direction: column !important; }
         }
       `}</style>
     </>

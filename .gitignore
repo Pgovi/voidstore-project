@@ -4,3 +4,5 @@ dist/
 aws/node_modules/
 .env
 .env.local
+.DS_Store
+aws/lambda.zip
