@@ -310,6 +310,7 @@ export default function EcommerceStore() {
       return [...prev, { ...product, qty: 1 }];
     });
     showNotification(`${product.name.split("—")[0].trim()} added`);
+    setCartOpen(true);
   };
 
   const removeFromCart = (id) => {
@@ -1751,26 +1752,35 @@ export default function EcommerceStore() {
                     <p style={{ fontSize: "28px", fontWeight: 800, color: gold, margin: 0 }}>₹{cartTotal.toLocaleString("en-IN")}</p>
                   </div>
 
-                  {/* UPI Payment — QR for desktop, button for mobile */}
+                  {/* UPI Payment — App buttons for mobile, QR for desktop */}
                   {(() => {
-                    const upiUrl = `upi://pay?pa=9611886777@kotak&pn=BidriKala&am=${cartTotal}&cu=INR&tn=${encodeURIComponent(`BidriKala Order - ${cartCount} item(s)`)}`;
+                    const upiParams = `pa=9611886777@kotak&pn=BidriKala&am=${cartTotal}&cu=INR&tn=${encodeURIComponent(`BidriKala Order - ${cartCount} item(s)`)}`;
+                    const upiUrl = `upi://pay?${upiParams}`;
                     const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
                     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                    const upiApps = [
+                      { name: "Google Pay", scheme: `tez://upi/pay?${upiParams}`, color: "#1a73e8", bg: "rgba(26,115,232,0.08)", logo: <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z" fill="#4285F4"/></svg> },
+                      { name: "PhonePe", scheme: `phonepe://pay?${upiParams}`, color: "#5f259f", bg: "rgba(95,37,159,0.08)", logo: <svg width="20" height="20" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#5f259f"/><path d="M7.5 18V6.5h3.8l3.2 4.5V6.5H17V18h-2.5l-4.5-6.3V18H7.5z" fill="#fff"/></svg> },
+                      { name: "Paytm", scheme: `paytmmp://pay?${upiParams}`, color: "#00baf2", bg: "rgba(0,186,242,0.08)", logo: <svg width="20" height="20" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#00baf2"/><path d="M4 9h2.5v6H4V9zm3.5 0H10l1.5 4L13 9h2.5l-2.8 6h-2.4L7.5 9zM16 9h2.5v6H16V9z" fill="#fff"/></svg> },
+                      { name: "Other UPI App", scheme: upiUrl, color: t1, bg: "rgba(0,0,0,0.04)", logo: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg> },
+                    ];
                     return isMobile ? (
-                      <button
-                        onClick={() => { window.location.href = upiUrl; }}
-                        style={{
-                          display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                          width: "100%", background: gold, color: "#0a0806", border: "none",
-                          padding: "14px", borderRadius: "8px", fontSize: "14px", fontWeight: 700,
-                          fontFamily: f, cursor: "pointer", transition: "opacity 0.2s", marginBottom: "10px",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg>
-                        Pay ₹{cartTotal.toLocaleString("en-IN")} via UPI
-                      </button>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "10px" }}>
+                        <p style={{ fontSize: "13px", fontWeight: 600, color: t1, textAlign: "center", marginBottom: "4px" }}>
+                          Pay ₹{cartTotal.toLocaleString("en-IN")} using
+                        </p>
+                        {upiApps.map((app) => (
+                          <a key={app.name} href={app.scheme}
+                            style={{
+                              display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                              width: "100%", background: app.bg, border: `1px solid ${app.color}20`,
+                              padding: "12px", borderRadius: "8px", fontSize: "14px", fontWeight: 600,
+                              fontFamily: f, cursor: "pointer", color: app.color, textDecoration: "none",
+                              transition: "opacity 0.2s", boxSizing: "border-box",
+                            }}
+                          >{app.logo} {app.name}</a>
+                        ))}
+                      </div>
                     ) : (
                       <div style={{
                         display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
