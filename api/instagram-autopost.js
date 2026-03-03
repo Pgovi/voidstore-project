@@ -91,7 +91,6 @@ async function postCarousel(products, dayOfYear, IG_USER_ID, TOKEN) {
       media_type: "CAROUSEL",
       children: childIds,
       caption: buildCarouselCaption(category, catProducts),
-      location_id: "263981580311674",
       access_token: TOKEN,
     }),
   });

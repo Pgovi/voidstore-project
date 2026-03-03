@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a84b"/>
+      <stop offset="50%" style="stop-color:#b08d3e"/>
+      <stop offset="100%" style="stop-color:#8a6d2f"/>
+    </linearGradient>
+    <linearGradient id="silverShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e0d0"/>
+      <stop offset="50%" style="stop-color:#c9b896"/>
+      <stop offset="100%" style="stop-color:#b08d3e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark circle background (matte black like Bidriware) -->
+  <circle cx="200" cy="200" r="200" fill="#1a1714"/>
+
+  <!-- Outer decorative ring (silver inlay inspired) -->
+  <circle cx="200" cy="200" r="185" fill="none" stroke="url(#gold)" stroke-width="2"/>
+  <circle cx="200" cy="200" r="178" fill="none" stroke="url(#gold)" stroke-width="0.5"/>
+
+  <!-- Bidri pattern - geometric floral motif (top) -->
+  <path d="M200 45 L210 65 L200 60 L190 65 Z" fill="url(#gold)" opacity="0.8"/>
+  <path d="M200 355 L210 335 L200 340 L190 335 Z" fill="url(#gold)" opacity="0.8"/>
+  <path d="M45 200 L65 190 L60 200 L65 210 Z" fill="url(#gold)" opacity="0.8"/>
+  <path d="M355 200 L335 190 L340 200 L335 210 Z" fill="url(#gold)" opacity="0.8"/>
+
+  <!-- Corner floral accents -->
+  <circle cx="200" cy="52" r="3" fill="url(#gold)" opacity="0.6"/>
+  <circle cx="200" cy="348" r="3" fill="url(#gold)" opacity="0.6"/>
+  <circle cx="52" cy="200" r="3" fill="url(#gold)" opacity="0.6"/>
+  <circle cx="348" cy="200" r="3" fill="url(#gold)" opacity="0.6"/>
+
+  <!-- Diagonal decorative dots -->
+  <circle cx="95" cy="95" r="2.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="305" cy="95" r="2.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="95" cy="305" r="2.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="305" cy="305" r="2.5" fill="url(#gold)" opacity="0.5"/>
+
+  <!-- Vase silhouette (Bidri signature piece) -->
+  <path d="
+    M175 130
+    C175 130 168 132 165 138
+    C162 144 164 148 164 148
+    L160 150
+    C155 152 152 158 152 162
+    L148 220
+    C146 240 150 260 158 275
+    C162 282 170 288 178 292
+    L180 294
+    C185 296 192 298 200 298
+    C208 298 215 296 220 294
+    L222 292
+    C230 288 238 282 242 275
+    C250 260 254 240 252 220
+    L248 162
+    C248 158 245 152 240 150
+    L236 148
+    C236 148 238 144 235 138
+    C232 132 225 130 225 130
+    C222 126 212 125 200 125
+    C188 125 178 126 175 130
+    Z
+  " fill="none" stroke="url(#gold)" stroke-width="1.8" opacity="0.9"/>
+
+  <!-- Vase neck ring -->
+  <ellipse cx="200" cy="148" rx="38" ry="4" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.7"/>
+
+  <!-- Bidri inlay pattern on vase - paisley/floral -->
+  <path d="M185 180 Q190 170 200 172 Q210 170 215 180 Q210 190 200 195 Q190 190 185 180 Z" fill="none" stroke="url(#gold)" stroke-width="1.2" opacity="0.8"/>
+  <circle cx="200" cy="182" r="3" fill="url(#gold)" opacity="0.6"/>
+
+  <path d="M178 220 Q185 210 195 215 Q190 225 178 220 Z" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.6"/>
+  <path d="M222 220 Q215 210 205 215 Q210 225 222 220 Z" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.6"/>
+
+  <!-- Small dots pattern on vase -->
+  <circle cx="188" cy="250" r="1.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="200" cy="245" r="1.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="212" cy="250" r="1.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="194" cy="262" r="1.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="206" cy="262" r="1.5" fill="url(#gold)" opacity="0.5"/>
+  <circle cx="200" cy="275" r="1.5" fill="url(#gold)" opacity="0.5"/>
+
+  <!-- BK monogram -->
+  <text x="200" y="345" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-weight="700" fill="url(#gold)" letter-spacing="6">BK</text>
+
+</svg>

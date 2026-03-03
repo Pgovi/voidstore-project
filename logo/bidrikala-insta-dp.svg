@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a84b"/>
+      <stop offset="50%" style="stop-color:#b08d3e"/>
+      <stop offset="100%" style="stop-color:#8a6d2f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Matte black background -->
+  <circle cx="200" cy="200" r="200" fill="#1a1714"/>
+
+  <!-- Outer gold ring -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="url(#g)" stroke-width="2.5"/>
+
+  <!-- B letter stylized -->
+  <text x="148" y="235" font-family="Georgia, 'Times New Roman', serif" font-size="120" font-weight="700" fill="#f0e8d8" letter-spacing="-2">B</text>
+
+  <!-- K letter in gold -->
+  <text x="240" y="235" font-family="Georgia, 'Times New Roman', serif" font-size="120" font-weight="700" fill="url(#g)" letter-spacing="-2">K</text>
+
+  <!-- Small decorative dots around the ring -->
+  <circle cx="200" cy="28" r="4" fill="url(#g)" opacity="0.7"/>
+  <circle cx="200" cy="372" r="4" fill="url(#g)" opacity="0.7"/>
+  <circle cx="28" cy="200" r="4" fill="url(#g)" opacity="0.7"/>
+  <circle cx="372" cy="200" r="4" fill="url(#g)" opacity="0.7"/>
+
+  <!-- Diagonal accents -->
+  <circle cx="78" cy="78" r="3" fill="url(#g)" opacity="0.4"/>
+  <circle cx="322" cy="78" r="3" fill="url(#g)" opacity="0.4"/>
+  <circle cx="78" cy="322" r="3" fill="url(#g)" opacity="0.4"/>
+  <circle cx="322" cy="322" r="3" fill="url(#g)" opacity="0.4"/>
+
+  <!-- Subtle tagline arc -->
+  <text x="200" y="320" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" fill="url(#g)" letter-spacing="4" opacity="0.7">BIDRIKALA</text>
+
+</svg>

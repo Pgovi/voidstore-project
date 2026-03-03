@@ -148,7 +148,6 @@ async function postCarousel(category, products) {
       media_type: "CAROUSEL",
       children: childIds,
       caption: buildCarouselCaption(category, products),
-      location_id: "263981580311674",
       access_token: TOKEN,
     }),
   });

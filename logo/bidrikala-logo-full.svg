@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <defs>
+    <linearGradient id="goldG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a84b"/>
+      <stop offset="50%" style="stop-color:#b08d3e"/>
+      <stop offset="100%" style="stop-color:#8a6d2f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="200" fill="#1a1714" rx="16"/>
+
+  <!-- Small vase icon -->
+  <g transform="translate(60, 100) scale(0.55)">
+    <circle cx="0" cy="0" r="70" fill="none" stroke="url(#goldG)" stroke-width="2"/>
+    <path d="
+      M-18 -35
+      C-18 -35 -22 -33 -24 -28
+      C-25 -24 -24 -22 -24 -22
+      L-26 -20
+      C-28 -19 -30 -16 -30 -14
+      L-32 18
+      C-33 28 -30 38 -26 44
+      C-24 47 -20 50 -16 52
+      L-14 53
+      C-10 54 -5 55 0 55
+      C5 55 10 54 14 53
+      L16 52
+      C20 50 24 47 26 44
+      C30 38 33 28 32 18
+      L30 -14
+      C30 -16 28 -19 26 -20
+      L24 -22
+      C24 -22 25 -24 24 -28
+      C22 -33 18 -35 18 -35
+      C14 -37 8 -38 0 -38
+      C-8 -38 -14 -37 -18 -35
+      Z
+    " fill="none" stroke="url(#goldG)" stroke-width="1.5"/>
+    <path d="M-8 -5 Q-4 -12 0 -10 Q4 -12 8 -5 Q4 3 0 6 Q-4 3 -8 -5 Z" fill="none" stroke="url(#goldG)" stroke-width="1" opacity="0.8"/>
+    <circle cx="0" cy="-3" r="2" fill="url(#goldG)" opacity="0.6"/>
+  </g>
+
+  <!-- Brand text -->
+  <text x="130" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="48" font-weight="700" fill="#f5f0e6" letter-spacing="1">Bidri</text>
+  <text x="330" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="48" font-weight="700" fill="url(#goldG)" letter-spacing="1">Kala</text>
+
+  <!-- Tagline -->
+  <text x="130" y="122" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#a09080" letter-spacing="3" text-transform="uppercase">HANDCRAFTED BIDRIWARE FROM BIDAR</text>
+
+  <!-- Decorative line -->
+  <line x1="130" y1="138" x2="480" y2="138" stroke="url(#goldG)" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- Sub details -->
+  <text x="130" y="160" font-family="'Helvetica Neue', Arial, sans-serif" font-size="10" fill="#807060" letter-spacing="2">PURE SILVER INLAY  ·  EST. BIDAR, KARNATAKA  ·  600-YEAR LEGACY</text>
+
+</svg>
