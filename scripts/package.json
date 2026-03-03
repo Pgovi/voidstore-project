@@ -5,7 +5,10 @@
   "scripts": {
     "post": "node instagram-post.mjs",
     "post-all": "node instagram-post.mjs --all",
-    "exchange-token": "node exchange-token.mjs"
+    "exchange-token": "node exchange-token.mjs",
+    "ads": "node meta-ads.mjs",
+    "ads-accounts": "node meta-ads.mjs accounts",
+    "ads-campaigns": "node meta-ads.mjs campaigns"
   },
   "dependencies": {
     "dotenv": "^16.4.7"
