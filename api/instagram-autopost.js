@@ -1,4 +1,5 @@
 const IG_API = "https://graph.instagram.com/v21.0";
+const FB_API = "https://graph.facebook.com/v25.0";
 const PRODUCTS_API = "https://d9fz0n04h2.execute-api.ap-south-1.amazonaws.com/products";
 
 export default async function handler(req, res) {
@@ -8,6 +9,8 @@ export default async function handler(req, res) {
 
   const TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
   const IG_USER_ID = process.env.INSTAGRAM_USER_ID;
+  const FB_PAGE_ID = process.env.FACEBOOK_PAGE_ID;
+  const FB_PAGE_TOKEN = process.env.FACEBOOK_PAGE_TOKEN;
 
   if (!TOKEN || !IG_USER_ID) {
     return res.status(500).json({ error: "Missing Instagram credentials" });
@@ -21,22 +24,49 @@ export default async function handler(req, res) {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
     const dayOfYear = Math.floor((now - start) / 86400000);
-    const isCarouselDay = dayOfYear % 3 === 0; // Every 3rd day = carousel
+    const isCarouselDay = dayOfYear % 3 === 0;
 
-    let result;
+    // Post to Instagram
+    let igResult;
     if (isCarouselDay) {
-      result = await postCarousel(products, dayOfYear, IG_USER_ID, TOKEN);
+      igResult = await postCarousel(products, dayOfYear, IG_USER_ID, TOKEN);
     } else {
-      result = await postSingle(products, dayOfYear, IG_USER_ID, TOKEN);
+      igResult = await postSingle(products, dayOfYear, IG_USER_ID, TOKEN);
     }
 
-    return res.status(200).json({ success: true, ...result });
+    // Post to Facebook Page (same product)
+    let fbResult = null;
+    if (FB_PAGE_ID && FB_PAGE_TOKEN) {
+      const index = dayOfYear % products.length;
+      const product = products[index];
+      fbResult = await postToFacebook(product, FB_PAGE_ID, FB_PAGE_TOKEN);
+    }
+
+    return res.status(200).json({ success: true, instagram: igResult, facebook: fbResult });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 }
 
-/* ── Single product post ── */
+/* ── Post to Facebook Page ── */
+async function postToFacebook(product, pageId, pageToken) {
+  const caption = buildFacebookCaption(product);
+
+  const res = await fetch(`${FB_API}/${pageId}/feed`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      message: caption,
+      link: "https://bidrikalastore.vercel.app",
+      access_token: pageToken,
+    }),
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(`Facebook post failed: ${data.error.message}`);
+  return { postId: data.id };
+}
+
+/* ── Instagram: Single product post ── */
 async function postSingle(products, dayOfYear, IG_USER_ID, TOKEN) {
   const index = dayOfYear % products.length;
   const product = products[index];
@@ -54,15 +84,13 @@ async function postSingle(products, dayOfYear, IG_USER_ID, TOKEN) {
   return { type: "single", product: product.name, mediaId };
 }
 
-/* ── Carousel post (category showcase) ── */
+/* ── Instagram: Carousel post ── */
 async function postCarousel(products, dayOfYear, IG_USER_ID, TOKEN) {
-  // Group products by category
   const categories = [...new Set(products.map((p) => p.category))];
   const catIndex = Math.floor(dayOfYear / 3) % categories.length;
   const category = categories[catIndex];
   const catProducts = products.filter((p) => p.category === category).slice(0, 5);
 
-  // Step 1: Create child containers for each image
   const childIds = [];
   for (const product of catProducts) {
     const childRes = await fetch(`${IG_API}/${IG_USER_ID}/media`, {
@@ -78,12 +106,9 @@ async function postCarousel(products, dayOfYear, IG_USER_ID, TOKEN) {
     const childData = await childRes.json();
     if (childData.error) throw new Error(`Child container failed: ${childData.error.message}`);
     childIds.push(childData.id);
-
-    // Wait for each child to process
     await waitForProcessing(childData.id, TOKEN);
   }
 
-  // Step 2: Create carousel container
   const carouselRes = await fetch(`${IG_API}/${IG_USER_ID}/media`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -167,6 +192,33 @@ function buildSingleCaption(product) {
   c += `#Bidriware #BidriKala #Handcrafted #IndianArt #SilverInlay\n`;
   c += `#MadeInIndia #BidarCraft #TraditionalArt #LuxuryDecor\n`;
   c += `#${product.category.replace(/\s+/g, "")} #ArtisanMade #Heritage #SilverOnBlack`;
+  return c;
+}
+
+function buildFacebookCaption(product) {
+  const name = product.name.split("—").map((s) => s.trim());
+  const title = name.length > 1 ? name[1] : name[0];
+  const hindiName = name.length > 1 ? name[0] : "";
+
+  let c = "";
+  if (hindiName) c += `✦ ${hindiName}\n`;
+  c += `${title}\n\n`;
+  c += `${product.description}\n\n`;
+  c += `✦ Pure silver inlay on matte-black alloy\n`;
+  c += `✦ Handcrafted in Bidar, Karnataka\n`;
+  c += `✦ 600-year-old Bidriware tradition\n\n`;
+  c += `₹${product.price.toLocaleString("en-IN")}`;
+  if (product.originalPrice && product.originalPrice > product.price) {
+    const discount = Math.round((1 - product.price / product.originalPrice) * 100);
+    c += ` (MRP ₹${product.originalPrice.toLocaleString("en-IN")} — Save ${discount}%)`;
+  }
+  c += `\n`;
+  c += `⭐ ${product.rating}/5 | ${product.reviews}+ reviews\n`;
+  if (product.stock <= 3) c += `🔸 Only ${product.stock} left in stock\n`;
+  c += `\n`;
+  c += `🛒 Shop now 👇\n`;
+  c += `📩 WhatsApp: +91 86604 46406\n\n`;
+  c += `#Bidriware #BidriKala #Handcrafted #IndianArt #SilverInlay #MadeInIndia`;
   return c;
 }
 
