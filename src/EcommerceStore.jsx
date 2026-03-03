@@ -17,7 +17,7 @@ const INFO_CONTENT = {
   "History of Bidri": "Bidriware originated in the 14th century during the reign of the Bahmani Sultans in Bidar, Karnataka. Abdullah bin Kaiser, a Persian craftsman, was invited by Sultan Ahmed Shah Bahmani to decorate the royal court. The craft blends Persian metalwork techniques with Indian design sensibilities, creating a unique art form that has survived over 600 years.",
   "The 8-Step Process": "Each Bidriware piece undergoes 8 meticulous stages: (1) Moulding — casting the zinc-copper alloy (1:16 ratio), (2) Smoothening — filing the surface, (3) Designing — sketching motifs with chisels, (4) Engraving — cutting patterns with chisel and hammer, (5) Silver Inlaying — pressing pure silver wire/sheet into grooves, (6) Smoothening — buffing the silver flush, (7) Buffing — polishing the surface, (8) Oxidising — applying Bidar Fort soil paste to blacken the alloy while leaving silver untouched.",
   "Bidar Fort Soil": "The secret behind Bidriware's signature jet-black finish lies in the soil from the 15th-century Bidar Fort. This soil is uniquely rich in potassium nitrate. When mixed with ammonium chloride and water, it creates a paste that selectively oxidises the zinc-copper alloy to a deep matte black — while leaving the silver inlay gleaming. No other soil in the world produces this exact chemical reaction.",
-  "Contact Us": "BidriKala — Direct from Bidar's artisan families to your home.\n\nEmail: namaste@bidrikala.in\nPhone: +91 86604 46406\nWorkshop: Mangalpet Road, Bidar, Karnataka 585401\n\nVisit our workshop to see master karigars at work. Tours available by appointment.",
+  "Contact Us": "BidriKala — Direct from Bidar's artisan families to your home.\n\nEmail: namaste@bidrikala.in\nPhone: +91 86604 46406\nInstagram: @bidrikala\nWorkshop: Mangalpet Road, Bidar, Karnataka 585401\n\nVisit our workshop to see master karigars at work. Tours available by appointment.",
   "Shipping & Delivery": "All BidriKala products are carefully wrapped in velvet-lined heritage boxes.\n\nIndia: Free shipping on all orders. Delivery in 5-7 business days.\nInternational: Shipped via insured courier. Delivery in 10-15 business days.\n\nEvery piece is packed with traditional handmade paper and includes a care guide.",
   "Returns Policy": "We stand behind every piece crafted by our artisans.\n\n30-Day Returns: If you're not completely satisfied, return within 30 days for a full refund.\nDamage Protection: All shipments are insured. Report any damage within 48 hours.\nExchange: Happy to exchange for a different piece of equal or greater value.\n\nContact us at namaste@bidrikala.in to initiate a return.",
   "Care Guide": "Bidriware is remarkably durable — pieces from the 15th century still survive in museums.\n\nDaily Care: Wipe with a soft dry cloth to maintain the silver's shine.\nDeep Clean: Use a mild silver polish on inlay areas only. Avoid abrasive cleaners.\nDo Not: Soak in water, use chemical cleaners, or expose to extreme heat.\nDisplay: Keep away from direct sunlight to preserve the matte-black finish.\n\nWith proper care, your Bidriware will last generations.",
@@ -1046,7 +1046,7 @@ export default function EcommerceStore() {
             <h3 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 800, letterSpacing: "-0.5px", marginBottom: "8px" }}>
               @bidrikala on Instagram
             </h3>
-            <p style={{ fontSize: "13px", color: t2, marginBottom: "32px" }}>See our latest creations and behind-the-scenes from the workshop</p>
+            <p style={{ fontSize: "13px", color: t2, marginBottom: "32px" }}>Handcrafted Bidriware — silver inlay art from Bidar, Karnataka 🖤✨ Shopping & retail</p>
             <div className="insta-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
               {products.slice(0, 6).map((p, i) => {
                 const fakeLikes = [128, 243, 89, 312, 176, 205][i] || 100;
@@ -1147,7 +1147,7 @@ export default function EcommerceStore() {
                 ))}
                 <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
                   {[
-                    { icon: "instagram", href: "#", hover: "#E4405F" },
+                    { icon: "instagram", href: "https://instagram.com/bidrikala", hover: "#E4405F" },
                     { icon: "facebook", href: "#", hover: "#1877F2" },
                     { icon: "linkedin", href: "#", hover: "#0A66C2" },
                     { icon: "whatsapp", href: "https://wa.me/918660446406", hover: "#25D366" },
