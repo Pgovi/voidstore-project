@@ -3,7 +3,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/send-order-email", "destination": "/api/send-order-email" }
+    { "source": "/api/send-order-email", "destination": "/api/send-order-email" },
+    { "source": "/api/product-feed", "destination": "/api/product-feed" }
   ],
   "crons": [
     {
