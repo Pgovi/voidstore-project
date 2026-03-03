@@ -88,12 +88,16 @@ export default function EcommerceStore() {
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const shopRef = useRef(null);
 
   const categories = ["All", ...new Set(products.map((p) => p.category))];
 
   /* Fetch products from API */
   useEffect(() => {
+    setProductsLoading(true);
+    setFetchError(false);
     fetch(`${API}/products`)
       .then((r) => r.json())
       .then((data) => {
@@ -105,7 +109,8 @@ export default function EcommerceStore() {
         }));
         setProducts(normalized.sort((a, b) => a.id - b.id));
       })
-      .catch(() => {});
+      .catch(() => setFetchError(true))
+      .finally(() => setProductsLoading(false));
   }, []);
 
   /* Fetch cart from API when logged in */
@@ -468,8 +473,6 @@ export default function EcommerceStore() {
 
   return (
     <>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
       <div style={{ minHeight: "100vh", background: bg, color: t1, fontFamily: f }}>
 
         {/* ══════ ANNOUNCEMENT BAR ══════ */}
@@ -534,7 +537,7 @@ export default function EcommerceStore() {
             </div>
 
             {/* Wishlist button */}
-            <button onClick={() => setWishlistOpen(true)} style={{
+            <button aria-label="Wishlist" onClick={() => setWishlistOpen(true)} style={{
               position: "relative", background: "rgba(0,0,0,0.04)", border: `1px solid ${border}`,
               borderRadius: "8px", padding: "7px 10px", color: t2, cursor: "pointer", display: "flex",
               alignItems: "center", fontSize: "13px", fontFamily: f, transition: "all 0.2s",
@@ -553,7 +556,7 @@ export default function EcommerceStore() {
               )}
             </button>
 
-            <button onClick={() => setCartOpen(true)} style={{
+            <button aria-label="Shopping cart" onClick={() => setCartOpen(true)} style={{
               position: "relative", background: "rgba(0,0,0,0.04)", border: `1px solid ${border}`,
               borderRadius: "8px", padding: "7px 10px", color: t2, cursor: "pointer", display: "flex",
               alignItems: "center", gap: "6px", fontSize: "13px", fontFamily: f, transition: "all 0.2s",
@@ -575,7 +578,7 @@ export default function EcommerceStore() {
             {/* User button */}
             {user ? (
               <div style={{ position: "relative" }}>
-                <button onClick={(e) => { e.stopPropagation(); setUserMenuOpen(!userMenuOpen); }} style={{
+                <button aria-label="User menu" onClick={(e) => { e.stopPropagation(); setUserMenuOpen(!userMenuOpen); }} style={{
                   background: gold, border: "none", borderRadius: "50%", width: "32px", height: "32px",
                   display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
                   color: "#fff", fontSize: "13px", fontWeight: 700, fontFamily: f,
@@ -617,7 +620,7 @@ export default function EcommerceStore() {
               >{Icons.user} <span className="login-text">Login</span></button>
             )}
 
-            <button className="mobile-menu-btn" onClick={() => setMobileMenu(!mobileMenu)} style={{
+            <button aria-label="Menu" className="mobile-menu-btn" onClick={() => setMobileMenu(!mobileMenu)} style={{
               display: "none", background: "none", border: "none", color: t2, cursor: "pointer", padding: "4px",
             }}>{Icons.menu}</button>
           </div>
@@ -754,7 +757,42 @@ export default function EcommerceStore() {
               </div>
             </div>
 
+            {/* Loading skeleton */}
+            {productsLoading && (
+              <div className="product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
+                {Array(8).fill(0).map((_, i) => (
+                  <div key={i} style={{ background: card, borderRadius: "12px", overflow: "hidden", border: `1px solid ${border}` }}>
+                    <div style={{ aspectRatio: "1", background: "rgba(0,0,0,0.04)", animation: "pulse 1.5s infinite" }} />
+                    <div style={{ padding: "16px" }}>
+                      <div style={{ height: "10px", width: "40%", background: "rgba(0,0,0,0.06)", borderRadius: "4px", marginBottom: "10px", animation: "pulse 1.5s infinite" }} />
+                      <div style={{ height: "14px", width: "80%", background: "rgba(0,0,0,0.06)", borderRadius: "4px", marginBottom: "8px", animation: "pulse 1.5s infinite" }} />
+                      <div style={{ height: "14px", width: "60%", background: "rgba(0,0,0,0.06)", borderRadius: "4px", marginBottom: "16px", animation: "pulse 1.5s infinite" }} />
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div style={{ height: "18px", width: "30%", background: "rgba(0,0,0,0.06)", borderRadius: "4px", animation: "pulse 1.5s infinite" }} />
+                        <div style={{ height: "28px", width: "50px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", animation: "pulse 1.5s infinite" }} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Error state */}
+            {fetchError && !productsLoading && (
+              <div style={{ textAlign: "center", padding: "80px 0", color: t3 }}>
+                <p style={{ fontSize: "40px", marginBottom: "12px" }}>⚠️</p>
+                <p style={{ fontSize: "16px", fontWeight: 600, color: t1, marginBottom: "6px" }}>Unable to load products</p>
+                <p style={{ fontSize: "13px", color: t2, marginBottom: "20px" }}>Please check your connection and try again</p>
+                <button onClick={() => window.location.reload()} style={{
+                  background: gold, color: "#fff", border: "none", padding: "10px 24px",
+                  borderRadius: "8px", fontSize: "13px", fontWeight: 600, fontFamily: f, cursor: "pointer",
+                }}>Retry</button>
+              </div>
+            )}
+
             {/* Product grid */}
+            {!productsLoading && !fetchError && (
+            <>
             <div className="product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
               {filteredProducts.map((product) => (
                 <div key={product.id} className="product-card" style={{
@@ -866,6 +904,8 @@ export default function EcommerceStore() {
                 <p style={{ fontSize: "16px", fontWeight: 500 }}>No products found</p>
                 <p style={{ fontSize: "13px", marginTop: "8px", color: t3 }}>Try a different search or category</p>
               </div>
+            )}
+            </>
             )}
           </div>
         </section>
@@ -1111,7 +1151,7 @@ export default function EcommerceStore() {
 
         {/* ══════ PRODUCT DETAIL MODAL ══════ */}
         {selectedProduct && (
-          <div onClick={() => setSelectedProduct(null)} style={{
+          <div role="dialog" aria-modal="true" aria-label="Product details" onClick={() => setSelectedProduct(null)} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)",
             zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center",
             padding: "24px", animation: "fadeIn 0.2s ease",
@@ -1162,16 +1202,31 @@ export default function EcommerceStore() {
                 )}
                 {selectedProduct.stock > 5 && <div style={{ marginBottom: "16px" }} />}
 
-                <div className="modal-add-to-cart" style={{ display: "flex", gap: "10px" }}>
+                <div className="modal-add-to-cart" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                   {selectedProduct.stock > 0 ? (
+                    <>
                     <button onClick={() => { addToCart(selectedProduct); setSelectedProduct(null); }} style={{
                       flex: 1, background: t1, color: bg, border: "none", padding: "12px",
                       borderRadius: "8px", fontSize: "14px", fontWeight: 600, fontFamily: f,
-                      cursor: "pointer", transition: "opacity 0.2s",
+                      cursor: "pointer", transition: "opacity 0.2s", minWidth: "120px",
                     }}
                       onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
                       onMouseLeave={(e) => (e.target.style.opacity = "1")}
                     >Add to Cart</button>
+                    <button onClick={() => {
+                      addToCart(selectedProduct); setSelectedProduct(null);
+                      if (!user) { setLoginOpen(true); return; }
+                      setCheckoutOpen(true); setCheckoutStep(1); setFormErrors({});
+                      setCustomerForm((prev) => ({ ...prev, name: user.name || prev.name, phone: user.phone || prev.phone, email: user.email || prev.email }));
+                    }} style={{
+                      flex: 1, background: gold, color: "#fff", border: "none", padding: "12px",
+                      borderRadius: "8px", fontSize: "14px", fontWeight: 600, fontFamily: f,
+                      cursor: "pointer", transition: "opacity 0.2s", minWidth: "120px",
+                    }}
+                      onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
+                      onMouseLeave={(e) => (e.target.style.opacity = "1")}
+                    >Buy Now</button>
+                    </>
                   ) : (
                     <button onClick={() => setNotifyProductId(selectedProduct.id)} style={{
                       flex: 1, background: gold, color: "#fff", border: "none", padding: "12px",
@@ -1254,7 +1309,7 @@ export default function EcommerceStore() {
 
         {/* ══════ CART SIDEBAR ══════ */}
         {cartOpen && (
-          <div onClick={() => setCartOpen(false)} style={{
+          <div role="dialog" aria-modal="true" aria-label="Shopping cart" onClick={() => setCartOpen(false)} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
             zIndex: 300, animation: "fadeIn 0.2s ease",
           }}>
@@ -1454,7 +1509,7 @@ export default function EcommerceStore() {
 
         {/* ══════ WISHLIST SIDEBAR ══════ */}
         {wishlistOpen && (
-          <div onClick={() => setWishlistOpen(false)} style={{
+          <div role="dialog" aria-modal="true" aria-label="Wishlist" onClick={() => setWishlistOpen(false)} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, animation: "fadeIn 0.2s ease",
           }}>
             <div onClick={(e) => e.stopPropagation()} style={{
@@ -1523,7 +1578,7 @@ export default function EcommerceStore() {
 
         {/* ══════ ORDERS SIDEBAR ══════ */}
         {ordersOpen && (
-          <div onClick={() => setOrdersOpen(false)} style={{
+          <div role="dialog" aria-modal="true" aria-label="My orders" onClick={() => setOrdersOpen(false)} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, animation: "fadeIn 0.2s ease",
           }}>
             <div onClick={(e) => e.stopPropagation()} style={{
@@ -1595,7 +1650,7 @@ export default function EcommerceStore() {
 
         {/* ══════ CHECKOUT MODAL ══════ */}
         {checkoutOpen && (
-          <div style={{
+          <div role="dialog" aria-modal="true" aria-label="Checkout" style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)",
             zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center",
             padding: "16px", animation: "fadeIn 0.2s ease",
@@ -1930,7 +1985,7 @@ export default function EcommerceStore() {
 
         {/* ══════ INFO MODAL ══════ */}
         {infoModal && (
-          <div onClick={() => setInfoModal(null)} style={{
+          <div role="dialog" aria-modal="true" aria-label={infoModal} onClick={() => setInfoModal(null)} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)",
             zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center",
             padding: "24px", animation: "fadeIn 0.2s ease",
@@ -1958,7 +2013,7 @@ export default function EcommerceStore() {
 
         {/* ══════ CRAFT STORY BOTTOM SHEET ══════ */}
         {craftSheetOpen && (
-          <div onClick={() => setCraftSheetOpen(false)} style={{
+          <div role="dialog" aria-modal="true" aria-label="The craft process" onClick={() => setCraftSheetOpen(false)} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(12px)",
             zIndex: 400, display: "flex", flexDirection: "column", justifyContent: "flex-end",
             animation: "fadeIn 0.2s ease",
@@ -2068,7 +2123,7 @@ export default function EcommerceStore() {
 
         {/* ══════ LOGIN MODAL ══════ */}
         {loginOpen && (
-          <div onClick={() => { setLoginOpen(false); setAuthMode("login"); setLoginError(""); }} style={{
+          <div role="dialog" aria-modal="true" aria-label="Login" onClick={() => { setLoginOpen(false); setAuthMode("login"); setLoginError(""); }} style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
             zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center",
             padding: "24px", animation: "fadeIn 0.3s ease",
