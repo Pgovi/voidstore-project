@@ -1,0 +1,13 @@
+{
+  "name": "bidrikala-instagram-autopost",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "post": "node instagram-post.mjs",
+    "post-all": "node instagram-post.mjs --all",
+    "exchange-token": "node exchange-token.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}

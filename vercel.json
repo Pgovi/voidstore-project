@@ -4,5 +4,11 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/send-order-email", "destination": "/api/send-order-email" }
+  ],
+  "crons": [
+    {
+      "path": "/api/instagram-autopost",
+      "schedule": "30 4 * * *"
+    }
   ]
 }
