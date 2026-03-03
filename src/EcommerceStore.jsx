@@ -1046,30 +1046,54 @@ export default function EcommerceStore() {
             <h3 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 800, letterSpacing: "-0.5px", marginBottom: "8px" }}>
               @bidrikala on Instagram
             </h3>
-            <p style={{ fontSize: "13px", color: t2, marginBottom: "24px" }}>See our latest creations and behind-the-scenes from the workshop</p>
+            <p style={{ fontSize: "13px", color: t2, marginBottom: "32px" }}>See our latest creations and behind-the-scenes from the workshop</p>
             <div className="insta-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
-              {products.slice(0, 6).map((p, i) => (
+              {products.slice(0, 6).map((p, i) => {
+                const fakeLikes = [128, 243, 89, 312, 176, 205][i] || 100;
+                const fakeComments = [14, 31, 8, 27, 19, 22][i] || 10;
+                return (
                 <a key={i} href="https://instagram.com/bidrikala" target="_blank" rel="noopener noreferrer" style={{
                   aspectRatio: "1", borderRadius: "10px", overflow: "hidden", position: "relative",
                   background: "#f5f3ef", display: "flex", alignItems: "center", justifyContent: "center",
-                  cursor: "pointer",
+                  cursor: "pointer", textDecoration: "none",
                 }}>
-                  <img src={p.image} alt="" loading="lazy" style={{ width: "80%", height: "80%", objectFit: "contain", transition: "transform 0.3s" }}
+                  <img src={p.image} alt={p.name || ""} loading="lazy" style={{ width: "80%", height: "80%", objectFit: "contain", transition: "transform 0.4s" }}
                     onMouseEnter={(e) => (e.target.style.transform = "scale(1.08)")}
                     onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
                   />
                   <div style={{
                     position: "absolute", inset: 0, background: "rgba(0,0,0,0)", transition: "background 0.3s",
-                    display: "flex", alignItems: "center", justifyContent: "center",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "16px",
                   }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.3)"; e.currentTarget.querySelector("span").style.opacity = "1"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0)"; e.currentTarget.querySelector("span").style.opacity = "0"; }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.4)"; Array.from(e.currentTarget.querySelectorAll("span")).forEach(s => s.style.opacity = "1"); }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0)"; Array.from(e.currentTarget.querySelectorAll("span")).forEach(s => s.style.opacity = "0"); }}
                   >
-                    <span style={{ color: "#fff", opacity: 0, transition: "opacity 0.3s" }}>{Icons.instagram}</span>
+                    <span style={{ color: "#fff", opacity: 0, transition: "opacity 0.3s", display: "flex", alignItems: "center", gap: "4px", fontSize: "14px", fontWeight: 600 }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                      {fakeLikes}
+                    </span>
+                    <span style={{ color: "#fff", opacity: 0, transition: "opacity 0.3s", display: "flex", alignItems: "center", gap: "4px", fontSize: "14px", fontWeight: 600 }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      {fakeComments}
+                    </span>
                   </div>
                 </a>
-              ))}
+                );
+              })}
             </div>
+            <a href="https://instagram.com/bidrikala" target="_blank" rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "8px",
+                marginTop: "28px", padding: "12px 28px", borderRadius: "50px",
+                border: `1.5px solid ${t1}`, background: "transparent", color: t1,
+                fontSize: "13px", fontWeight: 600, letterSpacing: "0.3px",
+                textDecoration: "none", transition: "all 0.3s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = t1; e.currentTarget.style.color = "#fff"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = t1; }}
+            >
+              {Icons.instagram} Follow @bidrikala
+            </a>
           </div>
         </section>
 
