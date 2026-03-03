@@ -29,35 +29,47 @@ function buildCaption(product) {
   if (hindiName) caption += `✦ ${hindiName}\n`;
   caption += `${title}\n\n`;
   caption += `${product.description}\n\n`;
+  caption += `✦ Pure silver inlay on matte-black alloy\n`;
+  caption += `✦ Handcrafted in Bidar, Karnataka\n`;
+  caption += `✦ 600-year-old Bidriware tradition\n\n`;
   caption += `₹${product.price.toLocaleString("en-IN")}`;
   if (product.originalPrice && product.originalPrice > product.price) {
     const discount = Math.round((1 - product.price / product.originalPrice) * 100);
-    caption += ` (${discount}% off)`;
+    caption += ` (MRP ₹${product.originalPrice.toLocaleString("en-IN")} — Save ${discount}%)`;
   }
-  caption += `\n\n`;
-  caption += `Category: ${product.category}\n`;
-  caption += `⭐ ${product.rating}/5 (${product.reviews} reviews)\n\n`;
-  if (product.stock <= 3) caption += `🔸 Only ${product.stock} left in stock\n\n`;
-  else caption += `\n`;
-  caption += `🛒 Shop now — Link in bio\n`;
+  caption += `\n`;
+  caption += `⭐ ${product.rating}/5 | ${product.reviews}+ reviews\n`;
+  if (product.stock <= 3) caption += `🔸 Only ${product.stock} left in stock\n`;
+  caption += `\n`;
+  caption += `🛒 Shop now → bidrikalastore.vercel.app\n`;
   caption += `📩 DM or WhatsApp: +91 86604 46406\n\n`;
   caption += `#Bidriware #BidriKala #Handcrafted #IndianArt #SilverInlay\n`;
   caption += `#MadeInIndia #BidarCraft #TraditionalArt #LuxuryDecor\n`;
-  caption += `#${product.category.replace(/\s+/g, "")} #ArtisanMade #Heritage`;
+  caption += `#${product.category.replace(/\s+/g, "")} #ArtisanMade #Heritage #SilverOnBlack`;
 
   return caption;
 }
 
+/* ── Build alt text for accessibility + SEO ── */
+function buildAltText(product) {
+  return `Handcrafted Bidriware ${product.name} — ${product.description.slice(0, 100)}`;
+}
+
 /* ── Post a single image to Instagram ── */
-async function postToInstagram(imageUrl, caption) {
-  // Step 1: Create media container
+async function postToInstagram(product) {
+  const caption = buildCaption(product);
+  const altText = buildAltText(product);
+
+  // Step 1: Create media container with alt text and location (Bidar, Karnataka)
   console.log("  Creating media container...");
   const createRes = await fetch(`${IG_API}/${IG_USER_ID}/media`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      image_url: imageUrl,
-      caption: caption,
+      image_url: product.image,
+      caption,
+      alt_text: altText,
+      location_id: "263981580311674",
       access_token: TOKEN,
     }),
   });
@@ -120,7 +132,6 @@ async function main() {
   products.sort((a, b) => parseInt(a.productId) - parseInt(b.productId));
 
   if (!postAll && !productId) {
-    // List all products
     console.log("Available products:\n");
     for (const p of products) {
       console.log(`  [${p.productId}] ${p.name} — ₹${p.price} (${p.category})`);
@@ -132,16 +143,14 @@ async function main() {
   }
 
   if (productId) {
-    // Post single product
     const product = products.find((p) => p.productId === productId);
     if (!product) {
       console.error(`Product ${productId} not found`);
       process.exit(1);
     }
     console.log(`Posting: ${product.name}`);
-    const caption = buildCaption(product);
-    console.log(`Caption preview:\n${caption}\n`);
-    const mediaId = await postToInstagram(product.image, caption);
+    console.log(`Caption preview:\n${buildCaption(product)}\n`);
+    const mediaId = await postToInstagram(product);
     console.log(`\nPosted successfully! Media ID: ${mediaId}`);
   }
 
@@ -153,11 +162,9 @@ async function main() {
     for (const product of products) {
       try {
         console.log(`[${product.productId}] ${product.name}`);
-        const caption = buildCaption(product);
-        const mediaId = await postToInstagram(product.image, caption);
+        const mediaId = await postToInstagram(product);
         console.log(`  Posted! Media ID: ${mediaId}\n`);
         success++;
-        // Wait 30 seconds between posts to avoid rate limiting
         if (product !== products[products.length - 1]) {
           console.log("  Waiting 30s before next post...\n");
           await new Promise((r) => setTimeout(r, 30000));

@@ -27,16 +27,19 @@ export default async function handler(req, res) {
     const index = dayOfYear % products.length;
     const product = products[index];
 
-    // Build caption
+    // Build caption and alt text
     const caption = buildCaption(product);
+    const altText = `Handcrafted Bidriware ${product.name} — ${product.description.slice(0, 100)}`;
 
-    // Step 1: Create media container
+    // Step 1: Create media container with alt text and location
     const createRes = await fetch(`${IG_API}/${IG_USER_ID}/media`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         image_url: product.image,
         caption,
+        alt_text: altText,
+        location_id: "263981580311674",
         access_token: TOKEN,
       }),
     });
@@ -85,20 +88,23 @@ function buildCaption(product) {
   if (hindiName) caption += `✦ ${hindiName}\n`;
   caption += `${title}\n\n`;
   caption += `${product.description}\n\n`;
+  caption += `✦ Pure silver inlay on matte-black alloy\n`;
+  caption += `✦ Handcrafted in Bidar, Karnataka\n`;
+  caption += `✦ 600-year-old Bidriware tradition\n\n`;
   caption += `₹${product.price.toLocaleString("en-IN")}`;
   if (product.originalPrice && product.originalPrice > product.price) {
     const discount = Math.round((1 - product.price / product.originalPrice) * 100);
-    caption += ` (${discount}% off)`;
+    caption += ` (MRP ₹${product.originalPrice.toLocaleString("en-IN")} — Save ${discount}%)`;
   }
   caption += `\n`;
   caption += `⭐ ${product.rating}/5 | ${product.reviews}+ reviews\n`;
   if (product.stock <= 3) caption += `🔸 Only ${product.stock} left in stock\n`;
   caption += `\n`;
-  caption += `🛒 Shop now — Link in bio\n`;
+  caption += `🛒 Shop now → bidrikalastore.vercel.app\n`;
   caption += `📩 DM or WhatsApp: +91 86604 46406\n\n`;
   caption += `#Bidriware #BidriKala #Handcrafted #IndianArt #SilverInlay\n`;
   caption += `#MadeInIndia #BidarCraft #TraditionalArt #LuxuryDecor\n`;
-  caption += `#${product.category.replace(/\s+/g, "")} #ArtisanMade #Heritage`;
+  caption += `#${product.category.replace(/\s+/g, "")} #ArtisanMade #Heritage #SilverOnBlack`;
 
   return caption;
 }
