@@ -468,13 +468,16 @@ export default function EcommerceStore() {
 
   const f = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
   const mono = "'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace";
-  const gold = "#b08d3e";
-  const bg = "#faf9f7";
+  const gold = "#c9a961";  // Enhanced: Brighter, more luxurious gold
+  const goldDark = "#9d7d3a";  // New: Darker gold for hover states
+  const bg = "#faf8f5";  // Enhanced: Warmer cream background
+  const bgDark = "#f5f2ed";  // New: Darker background for sections
   const card = "#ffffff";
-  const border = "rgba(0,0,0,0.08)";
-  const t1 = "#1c1917";
-  const t2 = "#57534e";
-  const t3 = "#a8a29e";
+  const border = "rgba(0,0,0,0.06)";  // Enhanced: Softer borders
+  const borderMedium = "rgba(0,0,0,0.12)";  // New: Medium borders
+  const t1 = "#1a1614";  // Enhanced: Richer black
+  const t2 = "#4a4542";  // Enhanced: Warmer gray
+  const t3 = "#9a938d";  // Enhanced: Lighter gray
 
   return (
     <>
