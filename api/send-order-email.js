@@ -2,7 +2,10 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  if (!RESEND_API_KEY) return res.status(500).json({ error: "Email not configured" });
+  if (!RESEND_API_KEY) {
+    console.error("RESEND_API_KEY environment variable is not set");
+    return res.status(500).json({ error: "Email not configured" });
+  }
 
   try {
     const { orderId, upiTxnId, customerName, customerEmail, customerPhone, address, items, subtotal, discount, total } = req.body;
@@ -67,7 +70,10 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    if (!response.ok) throw new Error(data.message || "Email send failed");
+    if (!response.ok) {
+      console.error("Resend API error:", JSON.stringify(data));
+      throw new Error(data.message || "Email send failed");
+    }
     res.json({ success: true });
   } catch (error) {
     console.error("Email error:", error.message);

@@ -10,7 +10,6 @@ export default async function handler(req, res) {
     const items = products
       .map((p) => {
         const availability = p.stock > 0 ? "in stock" : "out of stock";
-        const price = `${p.price.toFixed(2)} INR`;
         const salePrice = p.originalPrice && p.originalPrice > p.price
           ? `${p.price.toFixed(2)} INR`
           : "";
@@ -22,7 +21,7 @@ export default async function handler(req, res) {
       <g:id>${escapeXml(p.productId)}</g:id>
       <g:title>${escapeXml(p.name)}</g:title>
       <g:description>${escapeXml(p.description)}</g:description>
-      <g:link>${STORE_URL}</g:link>
+      <g:link>${STORE_URL}?product=${encodeURIComponent(p.productId)}</g:link>
       <g:image_link>${escapeXml(p.image)}</g:image_link>
       <g:availability>${availability}</g:availability>
       <g:condition>new</g:condition>

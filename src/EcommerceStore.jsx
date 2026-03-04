@@ -368,7 +368,8 @@ export default function EcommerceStore() {
     const errs = {};
     if (!customerForm.name.trim()) errs.name = "Name is required";
     if (!/^\d{10}$/.test(customerForm.phone.trim())) errs.phone = "Enter 10-digit phone number";
-    if (customerForm.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerForm.email.trim())) errs.email = "Invalid email";
+    if (!customerForm.email.trim()) errs.email = "Email is required for order confirmation";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerForm.email.trim())) errs.email = "Invalid email";
     if (!customerForm.address.trim()) errs.address = "Address is required";
     if (!customerForm.city.trim()) errs.city = "City is required";
     if (!customerForm.state.trim()) errs.state = "State is required";
@@ -388,6 +389,7 @@ export default function EcommerceStore() {
     const shippingAddress = `${customerForm.address}, ${customerForm.city}, ${customerForm.state} — ${customerForm.pincode}`;
 
     // Save order to AWS
+    let newOrderId = `BK${Date.now().toString(36).toUpperCase()}`;
     if (accessToken) {
       try {
         const res = await fetch(`${API}/orders`, {
@@ -399,26 +401,28 @@ export default function EcommerceStore() {
           }),
         });
         const data = await res.json();
-        setOrderId(data.orderId || `BK${Date.now().toString(36).toUpperCase()}`);
-      } catch { setOrderId(`BK${Date.now().toString(36).toUpperCase()}`); }
-    } else {
-      setOrderId(`BK${Date.now().toString(36).toUpperCase()}`);
+        if (data.orderId) newOrderId = data.orderId;
+      } catch { /* use fallback orderId */ }
     }
+    setOrderId(newOrderId);
     setCheckoutStep(3);
 
     // Send confirmation email to customer
     if (customerForm.email) {
-      fetch("/api/send-order-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId, upiTxnId: txn,
-          customerName: customerForm.name, customerEmail: customerForm.email, customerPhone: customerForm.phone,
-          address: shippingAddress,
-          items: cart.map((item) => ({ name: item.name.split("—")[0].trim(), qty: item.qty, price: item.price })),
-          subtotal: cartSubtotal, discount, total: cartTotal,
-        }),
-      }).catch(() => {});
+      try {
+        const emailRes = await fetch("/api/send-order-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: newOrderId, upiTxnId: txn,
+            customerName: customerForm.name, customerEmail: customerForm.email, customerPhone: customerForm.phone,
+            address: shippingAddress,
+            items: cart.map((item) => ({ name: item.name.split("—")[0].trim(), qty: item.qty, price: item.price })),
+            subtotal: cartSubtotal, discount, total: cartTotal,
+          }),
+        });
+        if (!emailRes.ok) console.error("Order email failed:", await emailRes.text());
+      } catch (err) { console.error("Order email error:", err); }
     }
   };
 
