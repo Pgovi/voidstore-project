@@ -4,7 +4,7 @@ dotenv.config({ path: resolve(import.meta.dirname, "../.env") });
 
 const FB_API = "https://graph.facebook.com/v25.0";
 const AD_ACCOUNT_ID = process.env.META_AD_ACCOUNT_ID; // format: act_123456
-const ACCESS_TOKEN = process.env.FACEBOOK_PAGE_TOKEN;
+const ACCESS_TOKEN = process.env.META_ADS_TOKEN || process.env.FACEBOOK_PAGE_TOKEN;
 const PAGE_ID = process.env.FACEBOOK_PAGE_ID;
 const IG_USER_ID = process.env.INSTAGRAM_USER_ID;
 const PRODUCTS_API = process.env.BIDRIKALA_API || "https://d9fz0n04h2.execute-api.ap-south-1.amazonaws.com";
@@ -17,13 +17,19 @@ if (!ACCESS_TOKEN) {
 
 /* ── API helper ── */
 async function graphApi(endpoint, params = {}) {
+  const body = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    body.append(key, typeof value === "object" ? JSON.stringify(value) : String(value));
+  }
+  body.append("access_token", ACCESS_TOKEN);
+
   const res = await fetch(`${FB_API}${endpoint}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...params, access_token: ACCESS_TOKEN }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
   });
   const data = await res.json();
-  if (data.error) throw new Error(`API Error: ${data.error.message}`);
+  if (data.error) throw new Error(`API Error: ${data.error.message} (code: ${data.error.code}, subcode: ${data.error.error_subcode})`);
   return data;
 }
 
@@ -68,6 +74,7 @@ async function createCampaign(name, objective = "OUTCOME_TRAFFIC") {
     objective,
     status: "PAUSED",
     special_ad_categories: [],
+    is_adset_budget_sharing_enabled: false,
   });
   console.log(`Campaign created: ${data.id}`);
   console.log(`Name: ${name}`);
@@ -157,18 +164,7 @@ async function quickCampaign(productId, dailyBudgetINR = 200) {
     geo_locations: { countries: ["IN"] },
     age_min: 25,
     age_max: 55,
-    locales: [6], // English (India)
-    flexible_spec: [
-      {
-        interests: [
-          { id: "6003139266461", name: "Handicraft" },
-          { id: "6003384829572", name: "Home decor" },
-          { id: "6003397425735", name: "Interior design" },
-          { id: "6003012327985", name: "Art" },
-          { id: "6003310769498", name: "Luxury goods" },
-        ],
-      },
-    ],
+    targeting_automation: { advantage_audience: 0 },
   };
 
   const adsetId = await createAdSet(
